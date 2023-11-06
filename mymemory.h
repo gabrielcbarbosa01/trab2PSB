@@ -1,15 +1,24 @@
-mymemory.h
+#ifndef MYMEMORY_H
+#define MYMEMORY_H
 
-// Estrutura que representa um bloco de memória alocado
+// Ensure that size_t is only defined if it's not already defined
+#ifndef SIZE_T_DEFINED
+typedef unsigned long size_t;
+#define SIZE_T_DEFINED
+#endif
+
+// Structure representing an allocated memory block
 typedef struct allocation {
-    void *start;              // Um ponteiro para o início do bloco alocado
-    size_t size;              // O tamanho da alocação
-    struct allocation *next;  // Um ponteiro para a próxima allocation_t (para formar uma lista encadeada)
+    void *start;              // Pointer to the start of the allocated block
+    size_t size;              // Size of the allocation
+    struct allocation *next;  // Pointer to the next allocation_t (to form a linked list)
 } allocation_t;
 
-// Estrutura que representa o pool total de memória e todas as alocações atuais
-typedef struct {
-    void *pool;               // Um ponteiro para o início do bloco de memória total
-    size_t total_size;        // O tamanho total do bloco de memória
-    allocation_t *head;       // Um ponteiro para a primeira allocation_t (cabeça da lista encadeada)
+// Structure representing the total memory pool and all current allocations
+typedef struct mymemory {
+    void *pool;               // Pointer to the start of the total memory block
+    size_t total_size;        // Total size of the memory block
+    allocation_t *head;       // Pointer to the first allocation_t (head of the linked list)
 } mymemory_t;
+
+#endif // MYMEMORY_H
