@@ -1,4 +1,3 @@
-// main.c
 #include "mymemory.h"
 #include <stdio.h>
 

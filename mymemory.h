@@ -1,24 +1,26 @@
 #ifndef MYMEMORY_H
 #define MYMEMORY_H
 
-// Ensure that size_t is only defined if it's not already defined
-#ifndef SIZE_T_DEFINED
-typedef unsigned long size_t;
-#define SIZE_T_DEFINED
-#endif
+#include <stddef.h> // for size_t
 
-// Structure representing an allocated memory block
 typedef struct allocation {
     void *start;              // Pointer to the start of the allocated block
     size_t size;              // Size of the allocation
-    struct allocation *next;  // Pointer to the next allocation_t (to form a linked list)
+    struct allocation *next;  // Pointer to the next allocation (linked list)
 } allocation_t;
 
-// Structure representing the total memory pool and all current allocations
 typedef struct mymemory {
-    void *pool;               // Pointer to the start of the total memory block
-    size_t total_size;        // Total size of the memory block
-    allocation_t *head;       // Pointer to the first allocation_t (head of the linked list)
+    void *pool;               // Pointer to the start of the memory pool
+    size_t total_size;        // Total size of the memory pool
+    allocation_t *head;       // Pointer to the first allocation (linked list head)
 } mymemory_t;
+
+// Function prototypes
+mymemory_t* mymemory_init(size_t size);
+void* mymemory_alloc(mymemory_t *memory, size_t size);
+void mymemory_free(mymemory_t *memory, void *ptr);
+void mymemory_display(mymemory_t *memory);
+void mymemory_cleanup(mymemory_t *memory);
+void mymemory_stats(mymemory_t *memory);
 
 #endif // MYMEMORY_H
