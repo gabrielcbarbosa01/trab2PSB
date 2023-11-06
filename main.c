@@ -5,52 +5,52 @@
 // ./mymemory_program
 
 int main() {
-    // Initialize the memory manager with a pool of 1024 bytes
+    // Inicializa o gerenciador de memória com um pool de 1024 bytes
     mymemory_t* my_memory = mymemory_init(1024);
     if (!my_memory) {
-        printf("Failed to initialize memory manager.\n");
+        printf("Falha ao inicializar o gerenciador de memória.\n");
         return 1;
     }
 
-    // Display initial memory stats
-    printf("Initial memory stats:\n");
+    // Exibe as estatísticas iniciais de memória
+    printf("Estatísticas iniciais de memória:\n");
     mymemory_stats(my_memory);
 
-    // Allocate some memory
+    // Aloca alguma memória
     void* block1 = mymemory_alloc(my_memory, 128);
     if (!block1) {
-        printf("Failed to allocate memory block 1.\n");
+        printf("Falha ao alocar o bloco de memória 1.\n");
         mymemory_cleanup(my_memory);
         return 1;
     }
 
     void* block2 = mymemory_alloc(my_memory, 256);
     if (!block2) {
-        printf("Failed to allocate memory block 2.\n");
-        mymemory_free(my_memory, block1); // Free the first block if the second allocation fails
+        printf("Falha ao alocar o bloco de memória 2.\n");
+        mymemory_free(my_memory, block1); // Libera o primeiro bloco se a segunda alocação falhar
         mymemory_cleanup(my_memory);
         return 1;
     }
 
-    // Display memory after allocations
-    printf("\nMemory after allocations:\n");
+    // Exibe a memória após as alocações
+    printf("\nMemória após as alocações:\n");
     mymemory_display(my_memory);
     mymemory_stats(my_memory);
 
-    // Free one block of memory
-    printf("\nFreeing block 1...\n");
+    // Libera um bloco de memória
+    printf("\nLiberando o bloco 1...\n");
     mymemory_free(my_memory, block1);
 
-    // Display memory after the free operation
-    printf("\nMemory after freeing block 1:\n");
+    // Exibe a memória após a operação de liberação
+    printf("\nMemória após liberar o bloco 1:\n");
     mymemory_display(my_memory);
     mymemory_stats(my_memory);
 
-    // Cleanup all memory
-    printf("\nCleaning up all memory...\n");
+    // Limpa toda a memória
+    printf("\nLimpando toda a memória...\n");
     mymemory_cleanup(my_memory);
 
-    printf("Memory management operations completed.\n");
+    printf("Operações de gerenciamento de memória concluídas.\n");
 
     return 0;
 }
