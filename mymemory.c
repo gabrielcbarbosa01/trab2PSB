@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-// Initializes the memory manager with a specified size
+// Inicializa o gerenciador de memória com um tamanho especificado
 mymemory_t* mymemory_init(size_t size) {
     mymemory_t* memory = (mymemory_t*)malloc(sizeof(mymemory_t));
     if (!memory) {
@@ -18,10 +18,10 @@ mymemory_t* mymemory_init(size_t size) {
     return memory;
 }
 
-// Allocates a block of memory of the specified size
+// Aloca um bloco de memória do tamanho especificado
 void* mymemory_alloc(mymemory_t *memory, size_t size) {
-    // This is a very simplified version without actual memory management logic
-    // Normally, you would search through the linked list for a suitable space
+    // Esta é uma versão muito simplificada sem a lógica real de gerenciamento de memória
+    // Normalmente, você procuraria na lista encadeada um espaço adequado
     allocation_t *new_alloc = (allocation_t*)malloc(sizeof(allocation_t));
     if (!new_alloc) {
         return NULL;
@@ -37,7 +37,7 @@ void* mymemory_alloc(mymemory_t *memory, size_t size) {
     return new_alloc->start;
 }
 
-// Frees the allocation pointed by ptr
+// Libera a alocação apontada por ptr
 void mymemory_free(mymemory_t *memory, void *ptr) {
     allocation_t *current = memory->head;
     allocation_t *previous = NULL;
@@ -58,22 +58,22 @@ void mymemory_free(mymemory_t *memory, void *ptr) {
     }
 }
 
-// Displays all current allocations
+// Exibe todas as alocações atuais
 void mymemory_display(mymemory_t *memory) {
     allocation_t *current = memory->head;
     while (current != NULL) {
-        printf("Allocation start: %p, size: %zu\n", current->start, current->size);
+        printf("Início da alocação: %p, tamanho: %zu\n", current->start, current->size);
         current = current->next;
     }
 }
 
-// Displays general memory statistics
+// Exibe estatísticas gerais da memória
 void mymemory_stats(mymemory_t *memory) {
     size_t total_allocations = 0;
     size_t total_allocated = 0;
-    size_t total_free = memory->total_size; // Simplified, assumes all free memory is contiguous
-    size_t largest_free_block = total_free; // Simplified
-    size_t free_fragments = 0; // Simplified, assumes no fragments
+    size_t total_free = memory->total_size; // Simplificado, assume que toda a memória livre está contígua
+    size_t largest_free_block = total_free; // Simplificado
+    size_t free_fragments = 0; // Simplificado, assume que não há fragmentos
 
     allocation_t *current = memory->head;
     while (current != NULL) {
@@ -81,16 +81,16 @@ void mymemory_stats(mymemory_t *memory) {
         total_allocated += current->size;
         current = current->next;
     }
-    total_free -= total_allocated; // Simplified, does not account for fragmentation or alignment
+    total_free -= total_allocated; // Simplificado, não contabiliza fragmentação ou alinhamento
 
-    printf("Total allocations: %zu\n", total_allocations);
-    printf("Total allocated memory: %zu bytes\n", total_allocated);
-    printf("Total free memory: %zu bytes\n", total_free);
-    printf("Largest free block: %zu bytes\n", largest_free_block);
-    printf("Number of free fragments: %zu\n", free_fragments);
+    printf("Total de alocações: %zu\n", total_allocations);
+    printf("Total de memória alocada: %zu bytes\n", total_allocated);
+    printf("Total de memória livre: %zu bytes\n", total_free);
+    printf("Maior bloco livre: %zu bytes\n", largest_free_block);
+    printf("Número de fragmentos livres: %zu\n", free_fragments);
 }
 
-// Cleans up all resources
+// Limpa todos os recursos
 void mymemory_cleanup(mymemory_t *memory) {
     allocation_t *current = memory->head;
     while (current != NULL) {
