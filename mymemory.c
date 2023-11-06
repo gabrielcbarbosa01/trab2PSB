@@ -1,4 +1,3 @@
-mymemory.c
 #include "mymemory.h"
 #include <stdlib.h>
 #include <stdio.h>
