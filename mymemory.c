@@ -20,22 +20,38 @@ mymemory_t* mymemory_init(size_t size) {
 
 // Aloca um bloco de memória do tamanho especificado
 void* mymemory_alloc(mymemory_t *memory, size_t size) {
-    // Esta é uma versão muito simplificada sem a lógica real de gerenciamento de memória
-    // Normalmente, você procuraria na lista encadeada um espaço adequado
+    // Verifique se o tamanho da alocação não excede o tamanho total da memória
+    if (size > memory->total_size) {
+        return NULL;
+    }
+
+    char* free_space = (char*)memory->pool;
+
+    // Encontre um espaço livre adequado no pool de memória
     allocation_t *new_alloc = (allocation_t*)malloc(sizeof(allocation_t));
     if (!new_alloc) {
         return NULL;
     }
-    new_alloc->start = malloc(size);
-    if (!new_alloc->start) {
+
+    // Verifique se há espaço suficiente no pool para alocar o bloco
+    if ((memory->total_size - (free_space - (char*)memory->pool)) < size) {
         free(new_alloc);
         return NULL;
     }
+
+    // Atribua o endereço do espaço livre para a alocação
+    new_alloc->start = free_space;
     new_alloc->size = size;
     new_alloc->next = memory->head;
     memory->head = new_alloc;
+
+    // Atualize o ponteiro para o próximo espaço livre no pool de memória
+    free_space += size;
+
     return new_alloc->start;
 }
+
+
 
 // Libera a alocação apontada por ptr
 void mymemory_free(mymemory_t *memory, void *ptr) {
