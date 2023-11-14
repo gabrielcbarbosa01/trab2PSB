@@ -86,11 +86,17 @@ void * mymemory_alloc_fist_fit(mymemory_t *memory, size_t size){
         memory -> head = new_alloc;
     }
     else{
+        //if((int)((current->start )-(memory->start_m )))
         while(current -> next != NULL){
-            if((int)(current - current -> next))
+            if((int)(current ->next ->start - current ->start ) > current ->size){
+                if(((int)(current ->next ->start - current ->start ) - current ->size) >= new_alloc->size){
+                    new_alloc ->next = current ->next;
+                    current -> next = new_alloc;
+                }
+
+            }
         current = current -> next;
     }
-    current ->next = new_alloc;
     }
     memory -> pool = (char *)memory->pool + size ;
     
@@ -117,7 +123,7 @@ void mymemory_free(mymemory_t *memory, void *ptr) {
             } else {
                 memory->head = current->next;
             }
-            free(current->start);
+            //free(current->start);
             free(current);
             return;
         }
@@ -154,7 +160,7 @@ void mymemory_stats(mymemory_t *memory) {
     
     printf("Inicio da memória: %p\n", (char*) memory->start_m);
     if(total_allocations == 2){
-        printf("Diferença =  %d \n",(memory ->head ->next ->start )- (memory->head ->start));
+        printf("Diferença =  %d \n",(int)((memory ->head ->next ->start )- (memory->head ->start)));
 
     }
     printf("Total de alocações: %zu\n", total_allocations);

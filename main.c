@@ -39,7 +39,8 @@ int main() {
 
     // Libera um bloco de memória
     printf("\nLiberando o bloco 1...\n");
-    mymemory_free(my_memory, block1);
+    void * block3 = mymemory_alloc(my_memory,500);
+    mymemory_free(my_memory, block2);
 
     // Exibe a memória após a operação de liberação
     printf("\nMemória após liberar o bloco 1:\n");
@@ -48,7 +49,7 @@ int main() {
 
     // Limpa toda a memória
     printf("\nLimpando toda a memória...\n");
-    mymemory_cleanup(my_memory);
+    //mymemory_cleanup(my_memory);
 
     printf("Operações de gerenciamento de memória concluídas.\n");
 
