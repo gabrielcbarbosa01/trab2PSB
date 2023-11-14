@@ -14,7 +14,9 @@ typedef struct allocation {
 typedef struct mymemory {
     void *pool;               // Ponteiro para o início do pool de memória
     size_t total_size;        // Tamanho total do pool de memória
-    allocation_t *head;       // Ponteiro para a primeira alocação (cabeça da lista encadeada)
+    allocation_t *head;
+    char *start_m    
+      // Ponteiro para a primeira alocação (cabeça da lista encadeada)
 } mymemory_t;
 
 // Protótipos das funções

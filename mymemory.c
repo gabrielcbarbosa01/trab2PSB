@@ -15,6 +15,7 @@ mymemory_t* mymemory_init(size_t size) {
     }
     memory->total_size = size;
     memory->head = NULL;
+    memory ->start_m = (char *) memory -> pool;
     return memory;
 }
 
@@ -42,13 +43,64 @@ void* mymemory_alloc(mymemory_t *memory, size_t size) {
     // Atribua o endereço do espaço livre para a alocação
     new_alloc->start = free_space;
     new_alloc->size = size;
-    new_alloc->next = memory->head;
-    memory->head = new_alloc;
+    allocation_t * current = //(allocation_t*)malloc(sizeof(allocation_t));
+    current = memory ->head;
+    if(current == NULL){
+        memory -> head = new_alloc;
+    }
+    else{
+        while(current -> next != NULL){
+        current = current -> next;
+    }
+    current ->next = new_alloc;
+    }
+    memory -> pool = (char *)memory->pool + size ;
+    
 
     // Atualize o ponteiro para o próximo espaço livre no pool de memória
-    free_space += size;
+    //free_space += size;
 
     return new_alloc->start;
+}
+
+void * mymemory_alloc_fist_fit(mymemory_t *memory, size_t size){
+     // Verifique se o tamanho da alocação não excede o tamanho total da memória
+    if (size > memory->total_size) {
+        return NULL;
+    }
+
+    char* free_space = (char*)memory->pool;
+
+    // Encontre um espaço livre adequado no pool de memória
+    allocation_t *new_alloc = (allocation_t*)malloc(sizeof(allocation_t));
+    if (!new_alloc) {
+        return NULL;
+    }
+
+
+    
+    new_alloc->size = size;
+    allocation_t * current = //(allocation_t*)malloc(sizeof(allocation_t));
+    current = memory ->head;
+    if(current == NULL){
+        memory -> head = new_alloc;
+    }
+    else{
+        while(current -> next != NULL){
+            if((int)(current - current -> next))
+        current = current -> next;
+    }
+    current ->next = new_alloc;
+    }
+    memory -> pool = (char *)memory->pool + size ;
+    
+    
+
+    // Atualize o ponteiro para o próximo espaço livre no pool de memória
+    //free_space += size;
+
+    return new_alloc->start;
+
 }
 
 
@@ -77,6 +129,7 @@ void mymemory_free(mymemory_t *memory, void *ptr) {
 // Exibe todas as alocações atuais
 void mymemory_display(mymemory_t *memory) {
     allocation_t *current = memory->head;
+    //printf("Inicio da memória: %p\n", (char*) memory->start_m);
     while (current != NULL) {
         printf("Início da alocação: %p, tamanho: %zu\n", current->start, current->size);
         current = current->next;
@@ -98,7 +151,12 @@ void mymemory_stats(mymemory_t *memory) {
         current = current->next;
     }
     total_free -= total_allocated; // Simplificado, não contabiliza fragmentação ou alinhamento
+    
+    printf("Inicio da memória: %p\n", (char*) memory->start_m);
+    if(total_allocations == 2){
+        printf("Diferença =  %d \n",(memory ->head ->next ->start )- (memory->head ->start));
 
+    }
     printf("Total de alocações: %zu\n", total_allocations);
     printf("Total de memória alocada: %zu bytes\n", total_allocated);
     printf("Total de memória livre: %zu bytes\n", total_free);

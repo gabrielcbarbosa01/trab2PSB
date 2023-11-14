@@ -17,7 +17,7 @@ int main() {
     mymemory_stats(my_memory);
 
     // Aloca alguma memória
-    void* block1 = mymemory_alloc(my_memory, 128);
+    void* block1 = mymemory_alloc(my_memory, 100);
     if (!block1) {
         printf("Falha ao alocar o bloco de memória 1.\n");
         mymemory_cleanup(my_memory);
