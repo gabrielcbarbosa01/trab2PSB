@@ -17,14 +17,14 @@ int main() {
     mymemory_stats(my_memory);
 
     // Aloca alguma memória
-    void* block1 = mymemory_alloc(my_memory, 100);
+    void* block1 = mymemory_alloc_fist_fit(my_memory, 100);
     if (!block1) {
         printf("Falha ao alocar o bloco de memória 1.\n");
         mymemory_cleanup(my_memory);
         return 1;
     }
 
-    void* block2 = mymemory_alloc(my_memory, 256);
+    void* block2 = mymemory_alloc_fist_fit(my_memory, 256);
     if (!block2) {
         printf("Falha ao alocar o bloco de memória 2.\n");
         mymemory_free(my_memory, block1); // Libera o primeiro bloco se a segunda alocação falhar
@@ -39,7 +39,7 @@ int main() {
 
     // Libera um bloco de memória
     printf("\nLiberando o bloco 1...\n");
-    void * block3 = mymemory_alloc(my_memory,500);
+    void * block3 = mymemory_alloc_fist_fit(my_memory,500);
     mymemory_free(my_memory, block2);
 
     // Exibe a memória após a operação de liberação
@@ -47,9 +47,14 @@ int main() {
     mymemory_display(my_memory);
     mymemory_stats(my_memory);
 
+    void * block4 = mymemory_alloc_fist_fit(my_memory,200);
+
+    mymemory_display(my_memory);
+    mymemory_stats(my_memory);
+
     // Limpa toda a memória
     printf("\nLimpando toda a memória...\n");
-    //mymemory_cleanup(my_memory);
+    mymemory_cleanup(my_memory);
 
     printf("Operações de gerenciamento de memória concluídas.\n");
 

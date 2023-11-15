@@ -84,28 +84,43 @@ void * mymemory_alloc_fist_fit(mymemory_t *memory, size_t size){
     current = memory ->head;
     if(current == NULL){
         memory -> head = new_alloc;
+        new_alloc ->start = (char *)memory ->pool;
+        return new_alloc->start;
     }
     else{
-        //if((int)((current->start )-(memory->start_m )))
+        if((int)((current->start )-(memory->pool)) != 0){
+            if((int)((current->start )-(memory->pool)) >= new_alloc -> size){
+                new_alloc -> next = current;
+                memory ->head = new_alloc;
+                new_alloc ->start = (char *)memory ->pool;
+                return new_alloc->start;
+            }
+
+        }
         while(current -> next != NULL){
-            if((int)(current ->next ->start - current ->start ) > current ->size){
-                if(((int)(current ->next ->start - current ->start ) - current ->size) >= new_alloc->size){
+            if((size_t)(current ->next ->start - current ->start ) > current ->size){
+                if(((size_t)(current ->next ->start - current ->start ) - current ->size) >= new_alloc->size){
                     new_alloc ->next = current ->next;
                     current -> next = new_alloc;
+                    new_alloc -> start = (char *)current -> start + current -> size;
                 }
 
             }
         current = current -> next;
     }
+    current -> next = new_alloc;
+    new_alloc ->start = (char *)current -> start + new_alloc ->size;
+    return new_alloc->start;
+
     }
-    memory -> pool = (char *)memory->pool + size ;
+    
     
     
 
     // Atualize o ponteiro para o próximo espaço livre no pool de memória
     //free_space += size;
-
-    return new_alloc->start;
+    free(new_alloc);
+    return NULL;
 
 }
 
