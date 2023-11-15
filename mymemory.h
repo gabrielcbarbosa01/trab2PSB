@@ -15,7 +15,7 @@ typedef struct mymemory {
     void *pool;               // Ponteiro para o início do pool de memória
     size_t total_size;        // Tamanho total do pool de memória
     allocation_t *head;
-    char *start_m    
+    char *start_m;   
       // Ponteiro para a primeira alocação (cabeça da lista encadeada)
 } mymemory_t;
 
@@ -26,6 +26,6 @@ void mymemory_free(mymemory_t *memory, void *ptr);
 void mymemory_display(mymemory_t *memory);
 void mymemory_cleanup(mymemory_t *memory);
 void mymemory_stats(mymemory_t *memory);
-void * mymemory_alloc_fist_fit(mymemory_t *memory, size_t size);
+void * mymemory_alloc_first_fit(mymemory_t *memory, size_t size);
 
 #endif // MYMEMORY_H
