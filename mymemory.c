@@ -69,8 +69,9 @@ void * mymemory_alloc_fist_fit(mymemory_t *memory, size_t size){
         return NULL;
     }
 
-    char* free_space = (char*)memory->pool;
 
+
+    
     // Encontre um espaço livre adequado no pool de memória
     allocation_t *new_alloc = (allocation_t*)malloc(sizeof(allocation_t));
     if (!new_alloc) {
@@ -80,6 +81,35 @@ void * mymemory_alloc_fist_fit(mymemory_t *memory, size_t size){
 
     
     new_alloc->size = size;
+    int count = 0;
+    char * final = (char *)memory->pool + memory->total_size;
+    //printf("%p\n",final);
+    allocation_t * verifica = memory->head;
+    if(verifica != NULL){
+        if((size_t)((verifica->start )-(memory->pool)) >= new_alloc ->size){
+            count ++;
+        }
+        while(verifica -> next != NULL){
+            if(((size_t)(verifica ->next ->start - verifica ->start ) - verifica ->size) >= new_alloc->size){
+                count ++;
+            }
+            verifica = verifica ->next;
+        }
+        //printf("%zu\n",(size_t)(final - (char *)(verifica -> start) - verifica ->size) );
+        if((size_t)(final - (char *)(verifica -> start) - verifica ->size) >= new_alloc ->size){
+            count ++;
+        }
+        if(count == 0){
+            free(new_alloc);
+            return NULL;
+
+
+        }
+    }
+    
+
+
+
     allocation_t * current = //(allocation_t*)malloc(sizeof(allocation_t));
     current = memory ->head;
     if(current == NULL){
@@ -89,7 +119,7 @@ void * mymemory_alloc_fist_fit(mymemory_t *memory, size_t size){
     }
     else{
         if((int)((current->start )-(memory->pool)) != 0){
-            if((int)((current->start )-(memory->pool)) >= new_alloc -> size){
+            if((size_t)((current->start )-(memory->pool)) >= new_alloc -> size){
                 new_alloc -> next = current;
                 memory ->head = new_alloc;
                 new_alloc ->start = (char *)memory ->pool;
@@ -99,19 +129,25 @@ void * mymemory_alloc_fist_fit(mymemory_t *memory, size_t size){
         }
         while(current -> next != NULL){
             if((size_t)(current ->next ->start - current ->start ) > current ->size){
+                //printf("%zu\n",(size_t)(current ->next ->start - current ->start ) - current ->size);
                 if(((size_t)(current ->next ->start - current ->start ) - current ->size) >= new_alloc->size){
                     new_alloc ->next = current ->next;
                     current -> next = new_alloc;
                     new_alloc -> start = (char *)current -> start + current -> size;
+                    return new_alloc->start;
                 }
 
             }
         current = current -> next;
     }
-    current -> next = new_alloc;
-    new_alloc ->start = (char *)current -> start + new_alloc ->size;
-    return new_alloc->start;
-
+    if((size_t)(final - (char *)(current -> start) - current ->size) >= new_alloc ->size){
+        current -> next = new_alloc;
+        new_alloc ->start = (char *)current -> start + current ->size;
+        return new_alloc->start;
+    }
+    free(new_alloc);
+    return NULL;
+    
     }
     
     
@@ -190,10 +226,8 @@ void mymemory_cleanup(mymemory_t *memory) {
     allocation_t *current = memory->head;
     while (current != NULL) {
         allocation_t *next = current->next;
-        free(current->start);
         free(current);
         current = next;
     }
-    free(memory->pool);
     free(memory);
 }
