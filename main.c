@@ -1,37 +1,69 @@
 #include "mymemory.h"
 #include <stdio.h>
 
-// gcc -o mymemory_program mymemory.c main.c 
-// ./mymemory_program
-
 int main() {
-// Inicializa o gerenciador de memória com um pool de 1024 bytes
-mymemory_t* my_memory = mymemory_init(400);
-if (!my_memory) {
-printf("Falha ao inicializar o gerenciador de memória.\n");
-return 1;
-}
+    int opc = 0;
+    size_t numero;
+    printf("Digite o tamanho da memória: ");
+    scanf("%zu", &numero);
 
-// Exibe as estatísticas iniciais de memória
-printf("Estatísticas iniciais de memória:\n");
-mymemory_stats(my_memory);
-printf("\n");
+    // Inicializa o gerenciador de memória com o tamanho fornecido
+    mymemory_t *my_memory = mymemory_init(numero);
 
-void * block1 = mymemory_alloc(my_memory, 100);
-void * block2 = mymemory_alloc(my_memory, 100);
-void * block3 = mymemory_alloc(my_memory, 100);
-mymemory_free(my_memory,block2);
-void * block4 = mymemory_alloc(my_memory, 190);
-mymemory_free(my_memory,block1);
-void * block5 = mymemory_alloc(my_memory, 190);
-void * block6 = mymemory_alloc(my_memory, 90);
-mymemory_free(my_memory,block5);
-void * block7 = mymemory_alloc(my_memory, 200);
-void * block8 = mymemory_alloc(my_memory, 10);
-mymemory_display(my_memory);
-//printf("a\n");
-mymemory_stats(my_memory);
-mymemory_cleanup(my_memory);
+    if (!my_memory) {
+        printf("Falha ao inicializar o gerenciador de memória.\n");
+        return 1;
+    }
 
-return 0;
+    do {
+        printf("GERENCIADOR DE MEMÓRIA \n");
+        printf("1) ALOCAÇÃO DE BLOCO DE MEMÓRIA\n");
+        printf("2) DESALOCAÇÃO DE BLOCO DE MEMÓRIA\n");
+        printf("3) LISTAR BLOCOS DE MEMÓRIA\n");
+        printf("4) MOSTRAR INFORMAÇÕES DA MEMÓRIA\n");
+        printf("5) SAIR DO SISTEMA\n");
+        printf("-------------------------------------------------\n");
+        printf("\n");
+
+        scanf("%d", &opc);
+
+        if (opc == 1) {
+            printf("DIGA A QUANTIDADE DE BYTES QUE SERÃO ALOCADOS: ");
+            scanf("%zu", &numero);
+            void *bloco = mymemory_alloc_first_fit(my_memory, numero);
+            if (bloco) {
+                printf("Bloco alocado com sucesso.\n");
+            } else {
+                printf("Falha ao alocar bloco de memória.\n");
+            }
+            printf("-------------------------------------------------\n");
+        } else if (opc == 2) {
+            printf("DIGA O ENDEREÇO DO BLOCO QUE SERÁ DESALOCADO: \n");
+            mymemory_display(my_memory);
+            
+    
+            unsigned long endereco;  
+            scanf("%lx", &endereco);
+            void *bloco = (void*)endereco;
+
+            mymemory_free(my_memory, bloco);
+            printf("Bloco desalocado com sucesso.\n");
+        } else if (opc == 3) {
+            mymemory_display(my_memory);
+            printf("-------------------------------------------------\n");
+        } else if (opc == 4) {
+            mymemory_stats(my_memory);
+            printf("-------------------------------------------------\n");
+        } else if (opc == 5) {
+            printf("Saindo do sistema.\n");
+        } else {
+            printf("Opção inválida.\n");
+        }
+
+    } while (opc != 5);
+
+    // Limpa todos os recursos antes de sair
+    mymemory_cleanup(my_memory);
+
+    return 0;
 }

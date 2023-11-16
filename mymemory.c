@@ -26,9 +26,6 @@ void* mymemory_alloc(mymemory_t *memory, size_t size) {
         return NULL;
     }
 
-
-
-    
     // Encontre um espaço livre adequado no pool de memória
     allocation_t *new_alloc = (allocation_t*)malloc(sizeof(allocation_t));
     if (!new_alloc) {
@@ -220,7 +217,7 @@ void * mymemory_alloc_first_fit(mymemory_t *memory, size_t size){
 
 
 
-// Libera a alocação apontada por ptr
+
 void mymemory_free(mymemory_t *memory, void *ptr) {
     allocation_t *current = memory->head;
     allocation_t *previous = NULL;
